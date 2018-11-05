@@ -4,7 +4,7 @@ import * as anagramService from '../services/anagram-service';
 
 class Mapper extends Handler {
   public handleLine(line: string) {
-    const words: string[] = line.split(' ');
+    const words: string[] = anagramService.splitWords(line);
     const keyValues: KeyValue[] = words.map(this.getKeyValue);
     const formattedKeyValues: string = super.formatKeyValues(keyValues)
 
