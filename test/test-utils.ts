@@ -14,10 +14,19 @@ export function captureStream(stream) {
     },
     captured: function() {
       return buf;
-    }
+    },
   };
 }
 
 export function getKeyValue(key: string, value: string) {
   return `${key}\t${value}\n`;
+}
+
+export function deindent(strings: string[]): string[] {
+  return strings.map(string => {
+    const deindented = string.replace(/[\n]\ +/g, '\n')
+                             .replace(/^[\n]/, '');
+
+    return deindented.endsWith('\n') ? deindented : `${deindented}\n`;
+  });
 }

@@ -18,6 +18,7 @@
     "@types/node": "7.0.22",
     "chai": "^4.2.0",
     "express": "4.15.3",
+    "mock-stdin": "^0.3.1",
     "nodemon": "1.11.0",
     "ts-node": "^7.0.1"
   },
