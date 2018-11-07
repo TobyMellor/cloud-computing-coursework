@@ -43,10 +43,14 @@ describe('Mapper', () => {
 
     it('treats all other separators as spaces', () => {
       mapper.handleLine('abc_def');
+      mapper.handleLine('abc--def');
 
       expect(hook.captured())
         .to
-        .equal(getKeyValue('abc', 'abc') + getKeyValue('def', 'def'));
+        .equal(getKeyValue('abc', 'abc') +
+               getKeyValue('def', 'def') +
+               getKeyValue('abc', 'abc') +
+               getKeyValue('def', 'def'));
     });
 
     it('ensures accents characters are distinct from non-accented characters', () => {
@@ -63,9 +67,9 @@ describe('Mapper', () => {
       expect(hook.captured())
         .to
         .equal(getKeyValue('adeegnrrs', 'gardeners') +
-              getKeyValue('adeegnrrs', 'gardener\'s') +
-              getKeyValue('adeegnrrs', 'gardeners\'') +
-              getKeyValue('adlsy', 'lady\'s'));
+               getKeyValue('adeegnrrs', 'gardener\'s') +
+               getKeyValue('adeegnrrs', 'gardeners\'') +
+               getKeyValue('adlsy', 'lady\'s'));
     });
   });
 
@@ -78,10 +82,6 @@ describe('Mapper', () => {
         stdio: ['pipe', 'pipe', 'pipe', 'ipc']
       });
   
-      child.stdout.on('data', () => {
-        child.stdout.removeAllListeners('data');
-        done();
-      });
       child.stdin.setEncoding('utf-8');
       child.stdout.pipe(process.stdout);
     });

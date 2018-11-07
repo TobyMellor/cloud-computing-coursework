@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "tsc --watch & nodemon dist",
     "lint": "eslint src --ext ts",
-    "test": "mocha --require ts-node/register --watch-extensions ts \"test/**/*.ts\"",
+    "test": "tsc && mocha --require ts-node/register --watch-extensions ts \"test/**/*.ts\"",
     "tsc": "tsc"
   },
   "keywords": [],
