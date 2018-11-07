@@ -84,6 +84,7 @@ describe('Mapper', () => {
   
       child.stdin.setEncoding('utf-8');
       child.stdout.pipe(process.stdout);
+      done();
     });
   
     afterEach(() => {
@@ -181,13 +182,12 @@ describe('Mapper', () => {
           aehnort\tanother
           dorw\tword
         `,
-        // TODO: Should NOT be returning punctuation ! at the end of a word
         `
           eginstt\ttesting
           cein\tnice
           eno\tone
-          akoy\tokay!
-          eehrt\tthere!
+          akoy\tokay
+          eehrt\tthere
         `,
         `
           aeilm\te-mail
@@ -202,9 +202,9 @@ describe('Mapper', () => {
           efiv\tfive
           isx\tsix
         `,
-        // TODO: Should NOT be treating x--y as the same word...
         `
-          ddggoo\tdog--god
+          dgo\tdog
+          dgo\tgod
         `,
         `
           dgo\togd
