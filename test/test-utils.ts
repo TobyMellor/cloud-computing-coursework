@@ -23,10 +23,12 @@ export function getKeyValue(key: string, value: string) {
 }
 
 export function deindent(strings: string[]): string[] {
-  return strings.map(string => {
-    const deindented = string.replace(/[\n]\ +/g, '\n')
+  const stringsDeindented = strings.map(string => {
+    const stringDeindented = string.replace(/[\n]\ +/g, '\n')
                              .replace(/^[\n]/, '');
 
-    return deindented.endsWith('\n') ? deindented : `${deindented}\n`;
+    return stringDeindented.endsWith('\n') ? stringDeindented : `${stringDeindented}\n`;
   });
+
+  return stringsDeindented;
 }

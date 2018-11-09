@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import * as testUtils from './test-utils';
-import Reducer from '../src/handlers/Reducer';
-import config from '../src/config';
+import * as testUtils from '../test-utils';
+import Reducer from '../../src/handlers/Reducer';
+import config from '../../src/config';
 
 describe('Reducer', () => {
   const reducer = new Reducer();

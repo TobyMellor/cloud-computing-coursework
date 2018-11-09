@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { captureStream, getKeyValue, deindent } from './test-utils';
-import Mapper from '../src/handlers/Mapper';
+import { captureStream, getKeyValue } from './../test-utils';
+import Mapper from '../../src/handlers/Mapper';
+import mocks from '../mocks';
 
 const path = require('path');
 const { spawn } = require('child_process');
@@ -25,7 +26,7 @@ describe('Mapper', () => {
         .equal(getKeyValue('acer', 'care'));
     });
 
-    it('preserves the case of values', () => {
+    it.skip('preserves the case of values', () => {
       mapper.handleLine('CaRe');
 
       expect(hook.captured())
@@ -41,14 +42,16 @@ describe('Mapper', () => {
         .equal(getKeyValue('aeilm', 'e-mail'));
     });
 
+    // TO FIX: Change replace _ to regex or replaceAll
     it('treats all other separators as spaces', () => {
-      mapper.handleLine('abc_def');
+      mapper.handleLine('abc_def_ghi');
       mapper.handleLine('abc--def');
 
       expect(hook.captured())
         .to
         .equal(getKeyValue('abc', 'abc') +
                getKeyValue('def', 'def') +
+               getKeyValue('ghi', 'ghi') +
                getKeyValue('abc', 'abc') +
                getKeyValue('def', 'def'));
     });
@@ -70,6 +73,31 @@ describe('Mapper', () => {
                getKeyValue('adeegnrrs', 'gardener\'s') +
                getKeyValue('adeegnrrs', 'gardeners\'') +
                getKeyValue('adlsy', 'lady\'s'));
+    });
+    
+    it('should discard "words" that contain numbers', () => {
+      mapper.handleLine('432425 whatever1');
+
+      expect(hook.captured())
+        .to
+        .equal('');
+    });
+    
+    it('should discard "words" that contain other characters', () => {
+      mapper.handleLine('testing me@tobymellor.com tobymellor.com tes*ting test!');
+
+      expect(hook.captured())
+        .to
+        .equal(getKeyValue('eginstt', 'testing') +
+               getKeyValue('estt', 'test'));
+    });
+    
+    it('should output values in lowercase', () => {
+      mapper.handleLine(`TESTING`);
+
+      expect(hook.captured())
+        .to
+        .equal(getKeyValue('eginstt', 'testing'));
     });
   });
 
@@ -112,47 +140,8 @@ describe('Mapper', () => {
     }
   
     it('should handle simple mocks as expected', done => {
-      const mapperExpectedInputLines: string[] = deindent([
-        `the quick brown fox jumps over the lazy dog race care`,
-        `seventeen sixteen fifteen thirteen twelve eleven ten nine`,
-        `eight seven six five four three two one zero`,
-      ]);
-      const mapperExpectedOutputLines: string[] = deindent([
-        `
-          eht\tthe
-          cikqu\tquick
-          bnorw\tbrown
-          fox\tfox
-          jmpsu\tjumps
-          eorv\tover
-          eht\tthe
-          alyz\tlazy
-          dgo\tdog
-          acer\trace
-          acer\tcare
-        `,
-        `
-          eeeennstv\tseventeen
-          eeinstx\tsixteen
-          eeffint\tfifteen
-          eehinrtt\tthirteen
-          eeltvw\ttwelve
-          eeelnv\televen
-          ent\tten
-          einn\tnine
-        `,
-        `
-          eghit\teight
-          eensv\tseven
-          isx\tsix
-          efiv\tfive
-          foru\tfour
-          eehrt\tthree
-          otw\ttwo
-          eno\tone
-          eorz\tzero
-        `,
-      ]);
+      const mapperExpectedInputLines: string[] = mocks.simple.mapper.testInputLines;
+      const mapperExpectedOutputLines: string[] = mocks.simple.mapper.expectedOutputLines;
   
       child.stdout.on('data', (msg: Buffer) => {
         return handleIO(msg, mapperExpectedInputLines, mapperExpectedOutputLines, child.stdin, done);
@@ -162,56 +151,8 @@ describe('Mapper', () => {
     });
   
     it('should handle advanced mocks as expected', done => {
-      const mapperExpectedInputLines: string[] = deindent([
-        `rAcE caRe`,
-        `care something another word`,
-        `testing nice one okay! there!`,
-        `e-mail one two three email`,
-        `eamIl four five six`,
-        `dog--god`,
-        `ogd dgo test`,
-      ]);
-      const mapperExpectedOutputLines: string[] = deindent([
-        `
-          acer\trAcE
-          acer\tcaRe
-        `,
-        `
-          acer\tcare
-          eghimnost\tsomething
-          aehnort\tanother
-          dorw\tword
-        `,
-        `
-          eginstt\ttesting
-          cein\tnice
-          eno\tone
-          akoy\tokay
-          eehrt\tthere
-        `,
-        `
-          aeilm\te-mail
-          eno\tone
-          otw\ttwo
-          eehrt\tthree
-          aeilm\temail
-        `,
-        `
-          aeilm\teamIl
-          foru\tfour
-          efiv\tfive
-          isx\tsix
-        `,
-        `
-          dgo\tdog
-          dgo\tgod
-        `,
-        `
-          dgo\togd
-          dgo\tdgo
-          estt\ttest
-        `,
-      ]);
+      const mapperExpectedInputLines: string[] = mocks.advanced.mapper.testInputLines;
+      const mapperExpectedOutputLines: string[] = mocks.advanced.mapper.expectedOutputLines;
   
       child.stdout.on('data', (msg: Buffer) => {
         return handleIO(msg, mapperExpectedInputLines, mapperExpectedOutputLines, child.stdin, done);
