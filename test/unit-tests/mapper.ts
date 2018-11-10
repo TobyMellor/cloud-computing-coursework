@@ -3,6 +3,7 @@ import 'mocha';
 import { captureStream, getKeyValue } from './../test-utils';
 import Mapper from '../../src/handlers/Mapper';
 import mocks from '../mocks';
+import config from '../../src/config';
 
 const path = require('path');
 const { spawn } = require('child_process');
@@ -26,7 +27,7 @@ describe('Mapper', () => {
         .equal(getKeyValue('acer', 'care'));
     });
 
-    it.skip('preserves the case of values', () => {
+    it('preserves the case of values', () => {
       mapper.handleLine('CaRe');
 
       expect(hook.captured())

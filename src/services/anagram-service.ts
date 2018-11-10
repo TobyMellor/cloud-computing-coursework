@@ -1,6 +1,8 @@
 import config from '../config';
 
-export type AnagramSet = Set<string>;
+export type Anagrams = {
+  [prop: string]: string; // [lowercase word]: Original or lowercase
+};
 
 const SEPARATORS = /--+|_+| +/;
 const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~()"“”‘’][^ ]+|\d)/;
@@ -11,7 +13,7 @@ export function splitWords(line: string) {
 
   const words = tokens.filter(w => !ILLEGAL_WORD.test(w))                    // Discard words containing punctuation
                       .map(w => w.replace(PUNCTUATION, ''))                  // Remove surrounding punctuation
-                      .filter(w => w.length >= config.minimumAnagramLength); // Discard words below the min length
+                      .filter(w => w.length >= config.mapper.minimumAnagramLength); // Discard words below the min length
 
   return words;
 }
@@ -32,8 +34,8 @@ export function getNormalizedWord(word: string) {
   return normalizedWord;
 }
 
-export function shouldOutputAnagrams(anagrams: AnagramSet) {
-  const anagramCount = anagrams.size;
+export function shouldOutputAnagrams(anagrams: Anagrams) {
+  const anagramCount = Object.keys(anagrams).length;
 
-  return anagramCount >= config.minimumAnagramSetSize;
+  return anagramCount >= config.reducer.minimumAnagramSetSize;
 }

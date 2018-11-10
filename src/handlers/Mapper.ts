@@ -14,7 +14,7 @@ class Mapper extends Handler {
   protected getKeyValue(word: string): KeyValue {
     const normalizedWord = anagramService.getNormalizedWord(word);
 
-    return super.getKeyValue(normalizedWord, word.toLowerCase());
+    return super.getKeyValue(normalizedWord, word);
   }
 
   public close() {
