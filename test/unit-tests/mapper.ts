@@ -93,11 +93,22 @@ describe('Mapper', () => {
     });
     
     it('should output values in lowercase', () => {
-      mapper.handleLine(`TESTING`);
+      mapper.handleLine('TESTING');
 
       expect(hook.captured())
         .to
         .equal(getKeyValue('eginstt', 'testing'));
+    });
+
+    it('should drop apostrophies that are prepending words', () => {
+      mapper.handleLine(`'tis a good morning's tobys'`);
+
+      expect(hook.captured())
+        .to
+        .equal(getKeyValue('ist', 'tis') +
+               getKeyValue('dgoo', 'good') +
+               getKeyValue('gimnnors', 'morning\'s') +
+               getKeyValue('bosty', 'tobys\''));
     });
   });
 

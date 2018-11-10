@@ -2,26 +2,18 @@ import config from '../config';
 
 export type AnagramSet = Set<string>;
 
+const SEPARATORS = /--+|_+| +/;
+const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~()"“”‘’][^ ]+|\d)/;
+const PUNCTUATION = /([.,\/#!$%\^&\*;:{}=\`~()"“”‘’?]|^')/g;
+
 export function splitWords(line: string) {
-  const sanatizedLine = line.replace(/[^ ]+[.,\/#!$%\^&\*;:{}=\`~()"“”‘’][^ ]+[ ]?/g, '') // Discard words containing punctuation (e.g. domains)
-                            .replace(/[.,\/#!$%\^&\*;:{}=\`~()"“”‘’]/g, '')               // Discard punctuation and other characters
-                            .replace(/_/g, ' ')                                           // Treat underscores as separators
-                            .replace(/(-|–|—){2,}/g, ' ');                                // Treat multiple hyphens as seperators
+  const tokens = line.split(SEPARATORS);
 
-  const words = sanatizedLine.split(' ');
-  const sanatizedWords = words.filter(word => {
-    if (/\d/.test(word)) { // Remove non-words (e.g. numbers)
-      return false;
-    }
+  const words = tokens.filter(w => !ILLEGAL_WORD.test(w))                    // Discard words containing punctuation
+                      .map(w => w.replace(PUNCTUATION, ''))                  // Remove surrounding punctuation
+                      .filter(w => w.length >= config.minimumAnagramLength); // Discard words below the min length
 
-    if (word.length < config.minimumWordLength) { // Remove small words (e.g. " " or "A")
-      return false;
-    }
-
-    return true;
-  });
-
-  return sanatizedWords;
+  return words;
 }
 
 export function getNormalizedWord(word: string) {

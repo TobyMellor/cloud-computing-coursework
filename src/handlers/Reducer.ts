@@ -1,3 +1,4 @@
+import config from '../config';
 import Handler, { KeyValue } from './Handler';
 import * as streamService from '../services/stream-service';
 import * as anagramService from '../services/anagram-service';
@@ -33,7 +34,9 @@ class Reducer extends Handler {
     const anagrams: string[] = [...currentValues];
     const anagramsJoined: string = anagrams.join(' ');
     const outputKeyValue: KeyValue = super.getKeyValue(currentKey, anagramsJoined);
-    const formattedKeyValue: string = super.formatKeyValue(outputKeyValue);
+    const formattedKeyValue: string = config.shouldFormatTestOutput
+                                    ? `{ ${outputKeyValue.value.split(' ').join(', ')} }\n`
+                                    : super.formatKeyValue(outputKeyValue);
 
     streamService.write(formattedKeyValue);
   }
