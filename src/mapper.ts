@@ -11,13 +11,23 @@ process.openStdin = function() {
 // @ts-ignore
 const stdin = process.openStdin();
 const mapper = new Mapper();
+let input = '';
 
 stdin.setEncoding('utf8');
-stdin.pipe(require('split')()).on('data', function(line) {
-  if (line) {
-    mapper.handleLine(line);
+stdin.on('data', function(data) {
+  if (data) {
+    input += data;
+
+    while (input.match(/\r?\n/)) {
+      const lineIndexOf = input.search(/\r?\n/);
+      const [left, right] = [input.slice(0, lineIndexOf), input.slice(lineIndexOf + 1, input.length)];
+      input = right;
+      mapper.handleLine(left);
+    }
   }
-})
-stdin.on('end', () => {
-  mapper.close();
+});
+stdin.on('end', function() {
+  if (input) {
+    mapper.handleLine(input);
+  }
 });
