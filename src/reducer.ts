@@ -1,4 +1,21 @@
-import * as streamService from './services/stream-service';
+#!/usr/bin/env node
+
 import Reducer from './handlers/Reducer';
 
-streamService.handleInput(new Reducer());
+// @ts-ignore
+process.openStdin = function() {
+  process.stdin.resume();
+  return process.stdin;
+};
+
+// @ts-ignore
+const stdin = process.openStdin();
+const reducer = new Reducer();
+
+stdin.setEncoding('utf8');
+stdin.on('data', data => {
+  reducer.handleLine(data);
+});
+stdin.on('end', () => {
+  reducer.close();
+});
