@@ -9,11 +9,22 @@ describe('Reducer', () => {
   let hook;
 
   beforeEach(() => {
-    config.minimumAnagramSetSize = 2;
+    config.reducer.minimumAnagramSetSize = 2;
+    config.reducer.shouldDiscardCaseOnContradiction = true;
+    config.reducer.shouldFormatTestOutput = false;
     hook = testUtils.captureStream(process.stdout);
   });
 
   afterEach(() => hook.unhook());
+
+  function assertReducerOutput(expected: string, mapperOutput: string) {
+    reducer.handleLine(mapperOutput);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(expected);
+  }
 
   it('combines anagrams from the mappers output', () => {
     const mapperOutputLine1 = testUtils.getKeyValue('acer', 'care');
@@ -31,21 +42,36 @@ describe('Reducer', () => {
   });
 
   it('adjusts the minimum set size through minimumAnagramSetSize', () => {
-    function assertReducerOutput(expected: string) {
-      const mapperOutput = testUtils.getKeyValue('acer', 'care');
+    assertReducerOutput('', testUtils.getKeyValue('acer', 'care'));
 
-      reducer.handleLine(mapperOutput);
-      reducer.close();
-  
-      expect(hook.captured())
-        .to
-        .equal(expected);
-    }
+    config.reducer.minimumAnagramSetSize = 1;
+    assertReducerOutput(testUtils.getKeyValue('acer', 'care'), testUtils.getKeyValue('acer', 'care'));
+  });
 
-    config.minimumAnagramSetSize = 2;
-    assertReducerOutput('');
+  it('attempts to keep case through shouldDiscardCaseOnContradiction', () => {
+    const mapperOutputLine1 = testUtils.getKeyValue('boty', 'Toby');
+    const mapperOutputLine2 = testUtils.getKeyValue('ellmor', 'Mellor');
+    const mapperOutputLine3 = testUtils.getKeyValue('ellmor', 'mellor');
 
-    config.minimumAnagramSetSize = 1;
-    assertReducerOutput(testUtils.getKeyValue('acer', 'care'));
+    reducer.handleLine(mapperOutputLine1);
+    reducer.handleLine(mapperOutputLine2);
+    reducer.handleLine(mapperOutputLine3);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('boty', 'Toby') +
+             testUtils.getKeyValue('ellmor', 'mellor'));
+
+    config.reducer.shouldDiscardCaseOnContradiction = false;
+
+    const mapperOutputLine4 = testUtils.getKeyValue('eginstt', 'Testing');
+
+    reducer.handleLine(mapperOutputLine4);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('eginstt', 'testing'));
   });
 });

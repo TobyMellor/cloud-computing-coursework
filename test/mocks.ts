@@ -59,8 +59,8 @@ export default {
       ]),
       expectedOutputLines: deindent([
         `
-          acer\trace
-          acer\tcare
+          acer\trAcE
+          acer\tcaRe
         `,
         `
           acer\tcare
@@ -83,7 +83,7 @@ export default {
           aeilm\temail
         `,
         `
-          aeilm\teamil
+          aeilm\teamIl
           foru\tfour
           efiv\tfive
           isx\tsix
