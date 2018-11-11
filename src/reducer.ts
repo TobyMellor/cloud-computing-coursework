@@ -13,9 +13,11 @@ const stdin = process.openStdin();
 const reducer = new Reducer();
 
 stdin.setEncoding('utf8');
-stdin.on('data', data => {
-  reducer.handleLine(data);
-});
+stdin.pipe(require('split')()).on('data', function(line) {
+  if (line) {
+    reducer.handleLine(line);
+  }
+})
 stdin.on('end', () => {
   reducer.close();
 });

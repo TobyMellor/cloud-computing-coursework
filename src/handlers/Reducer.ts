@@ -13,7 +13,7 @@ class Reducer extends Handler {
     let lowerWord = originalWord.toLowerCase(); 
 
     if (config.reducer.shouldDiscardApostropheIfTwoSeen) lowerWord = lowerWord.replace(/'/g, '');
-    if (config.reducer.shouldDiscardHyphenIfTwoSeen) lowerWord = lowerWord.replace(/-/g, '');
+    if (config.reducer.shouldDiscardHyphenIfTwoSeen)     lowerWord = lowerWord.replace(/-/g, '');
 
     // It's the first key, or there's been a key change
     if (this.currentKey !== normalizedWord) {

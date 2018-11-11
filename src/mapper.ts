@@ -13,9 +13,11 @@ const stdin = process.openStdin();
 const mapper = new Mapper();
 
 stdin.setEncoding('utf8');
-stdin.on('data', data => {
-  mapper.handleLine(data);
-});
+stdin.pipe(require('split')()).on('data', function(line) {
+  if (line) {
+    mapper.handleLine(line);
+  }
+})
 stdin.on('end', () => {
   mapper.close();
 });
