@@ -13,7 +13,9 @@ export function captureStream(stream) {
       stream.write = oldWrite;
     },
     captured: function() {
-      return buf;
+      const output = buf;
+      buf = '';
+      return output;
     },
   };
 }

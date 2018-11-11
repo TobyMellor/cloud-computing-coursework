@@ -10,7 +10,9 @@ describe('Reducer', () => {
 
   beforeEach(() => {
     config.reducer.minimumAnagramSetSize = 2;
-    config.reducer.shouldDiscardCaseOnContradiction = true;
+    config.reducer.shouldDiscardCaseIfTwoSeen = true;
+    config.reducer.shouldDiscardApostropheIfTwoSeen = true;
+    config.reducer.shouldDiscardHyphenIfTwoSeen = true;
     config.reducer.shouldFormatTestOutput = false;
     hook = testUtils.captureStream(process.stdout);
   });
@@ -48,7 +50,9 @@ describe('Reducer', () => {
     assertReducerOutput(testUtils.getKeyValue('acer', 'care'), testUtils.getKeyValue('acer', 'care'));
   });
 
-  it('attempts to keep case through shouldDiscardCaseOnContradiction', () => {
+  it('attempts to keep case through shouldDiscardCaseIfTwoSeen', () => {
+    config.reducer.minimumAnagramSetSize = 1;
+
     const mapperOutputLine1 = testUtils.getKeyValue('boty', 'Toby');
     const mapperOutputLine2 = testUtils.getKeyValue('ellmor', 'Mellor');
     const mapperOutputLine3 = testUtils.getKeyValue('ellmor', 'mellor');
@@ -63,7 +67,7 @@ describe('Reducer', () => {
       .equal(testUtils.getKeyValue('boty', 'Toby') +
              testUtils.getKeyValue('ellmor', 'mellor'));
 
-    config.reducer.shouldDiscardCaseOnContradiction = false;
+    config.reducer.shouldDiscardCaseIfTwoSeen = false;
 
     const mapperOutputLine4 = testUtils.getKeyValue('eginstt', 'Testing');
 
@@ -73,5 +77,61 @@ describe('Reducer', () => {
     expect(hook.captured())
       .to
       .equal(testUtils.getKeyValue('eginstt', 'testing'));
+  });
+
+  it('attempts to keep apostrophe through shouldDiscardApostropheIfTwoSeen', () => {
+    config.reducer.minimumAnagramSetSize = 1;
+
+    const mapperOutputLine1 = testUtils.getKeyValue('adeegnrrs', 'gardeners\'');
+    const mapperOutputLine2 = testUtils.getKeyValue('adeegnrrs', 'gardener\'s');
+
+    reducer.handleLine(mapperOutputLine1);
+    reducer.handleLine(mapperOutputLine2);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('adeegnrrs', 'gardeners'));
+
+    config.reducer.shouldDiscardApostropheIfTwoSeen = false;
+
+    const mapperOutputLine3 = testUtils.getKeyValue('adeegnrrs', 'gardeners\'');
+    const mapperOutputLine4 = testUtils.getKeyValue('adeegnrrs', 'gardener\'s');
+
+    reducer.handleLine(mapperOutputLine3);
+    reducer.handleLine(mapperOutputLine4);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('adeegnrrs', 'gardeners\' gardener\'s'));
+  });
+
+  it('attempts to keep hyphen through shouldDiscardApostropheIfTwoSeen', () => {
+    config.reducer.minimumAnagramSetSize = 1;
+
+    const mapperOutputLine1 = testUtils.getKeyValue('bdeeelllovw', 'well-beloved');
+    const mapperOutputLine2 = testUtils.getKeyValue('bdeeelllovw', 'wellbeloved');
+
+    reducer.handleLine(mapperOutputLine1);
+    reducer.handleLine(mapperOutputLine2);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('bdeeelllovw', 'wellbeloved'));
+
+    config.reducer.shouldDiscardHyphenIfTwoSeen = false;
+
+    const mapperOutputLine3 = testUtils.getKeyValue('bdeeelllovw', 'well-beloved');
+    const mapperOutputLine4 = testUtils.getKeyValue('bdeeelllovw', 'wellbeloved');
+
+    reducer.handleLine(mapperOutputLine3);
+    reducer.handleLine(mapperOutputLine4);
+    reducer.close();
+
+    expect(hook.captured())
+      .to
+      .equal(testUtils.getKeyValue('bdeeelllovw', 'well-beloved wellbeloved'));
   });
 });

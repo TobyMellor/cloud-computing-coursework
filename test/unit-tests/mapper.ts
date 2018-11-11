@@ -3,7 +3,6 @@ import 'mocha';
 import { captureStream, getKeyValue } from './../test-utils';
 import Mapper from '../../src/handlers/Mapper';
 import mocks from '../mocks';
-import config from '../../src/config';
 
 const path = require('path');
 const { spawn } = require('child_process');

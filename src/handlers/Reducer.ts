@@ -9,8 +9,11 @@ class Reducer extends Handler {
   private currentValues: Anagrams = {};
 
   public handleLine(line: string) {
-    const [normalizedWord, word] = line.trim().split('\t');
-    const lowerWord = word.toLowerCase();
+    const [normalizedWord, originalWord] = line.trim().split('\t');
+    let lowerWord = originalWord.toLowerCase(); 
+
+    if (config.reducer.shouldDiscardApostropheIfTwoSeen) lowerWord = lowerWord.replace(/'/g, '');
+    if (config.reducer.shouldDiscardHyphenIfTwoSeen) lowerWord = lowerWord.replace(/-/g, '');
 
     // It's the first key, or there's been a key change
     if (this.currentKey !== normalizedWord) {
@@ -24,11 +27,11 @@ class Reducer extends Handler {
       this.currentValues = {};
     }
 
-    if (config.reducer.shouldDiscardCaseOnContradiction) {
-      if (this.currentValues[lowerWord] && this.currentValues[lowerWord] !== word) {
+    if (config.reducer.shouldDiscardCaseIfTwoSeen) {
+      if (this.currentValues[lowerWord] && this.currentValues[lowerWord] !== originalWord) {
         this.currentValues[lowerWord] = lowerWord;
       } else {
-        this.currentValues[lowerWord] = word;
+        this.currentValues[lowerWord] = originalWord;
       }
     } else {
       this.currentValues[lowerWord] = lowerWord;
@@ -52,6 +55,8 @@ class Reducer extends Handler {
 
   public close() {
     this.output(this.currentKey, this.currentValues);
+    this.currentKey = null;
+    this.currentValues = {};
   }
 }
 
