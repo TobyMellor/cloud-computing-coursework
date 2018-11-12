@@ -7,9 +7,6 @@ if [[ $4 -eq 0 ]] ; then
     exit 1
 fi
 
-# Exit script if any error occurs (e.g. user pressing Ctrl + C)
-set -e
-
 # Compile typescript, move to /dist
 npm run build
 
@@ -31,7 +28,7 @@ echo "$reducer_script" > ./dist/reducer_init.sh
 
 # Zip the dist and node binary together and we'll include them in --files
 # Suppress any errors we don't care about
-tar -cf package.tar.gz dist \"$(which node)\" &> /dev/null
+tar -cvf package.tar.gz dist \"$(which node)\" 2> /dev/null
 
 # Run the google commands, with the arguments specified
 gcloud dataproc jobs submit hadoop \
