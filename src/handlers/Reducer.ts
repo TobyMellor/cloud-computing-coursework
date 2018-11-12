@@ -1,8 +1,7 @@
 import config from '../config';
 import Handler, { KeyValue } from './Handler';
 import * as streamService from '../services/stream-service';
-import * as anagramService from '../services/anagram-service';
-import { Anagrams } from '../services/anagram-service';
+import { Anagrams, shouldOutputAnagrams } from '../services/anagram-service';
 
 class Reducer extends Handler {
   private currentKey: string = null;
@@ -10,7 +9,7 @@ class Reducer extends Handler {
 
   public handleLine(line: string) {
     const [normalizedWord, originalWord] = line.trim().split('\t');
-    let lowerWord = originalWord.toLowerCase(); 
+    let lowerWord = originalWord.toLowerCase();
 
     if (config.reducer.shouldDiscardApostropheIfTwoSeen) lowerWord = lowerWord.replace(/'/g, '');
     if (config.reducer.shouldDiscardHyphenIfTwoSeen)     lowerWord = lowerWord.replace(/-/g, '');
@@ -39,7 +38,7 @@ class Reducer extends Handler {
   }
 
   private output(currentKey: string, currentValues: Anagrams) {
-    if (!anagramService.shouldOutputAnagrams(currentValues)) {
+    if (!shouldOutputAnagrams(currentValues)) {
       return;
     }
 

@@ -10,7 +10,7 @@ abstract class Handler {
     return {
       key,
       value,
-    }
+    };
   }
 
   protected formatKeyValues(keyValues: KeyValue[]) {

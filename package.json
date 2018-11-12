@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm install && tsc && cp src/mapper_init.sh dist/mapper_init.sh && cp src/reducer_init.sh dist/reducer_init.sh",
     "dev": "tsc --watch & nodemon dist",
     "lint": "eslint src --ext ts",
     "test": "tsc && mocha --require ts-node/register --watch-extensions ts \"test/**/*.ts\"",
@@ -14,24 +14,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/node": "7.0.22",
-    "chai": "^4.2.0",
     "express": "4.15.3",
-    "mock-stdin": "^0.3.1",
     "nodemon": "1.11.0",
     "ts-node": "^7.0.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/mocha": "^2.2.41",
     "@types/node": "7.0.22",
-    "eslint": "4.0.0",
-    "eslint-config-airbnb-base": "11.2.0",
-    "eslint-plugin-import": "2.3.0",
-    "eslint-plugin-promise": "3.5.0",
+    "chai": "^4.2.0",
     "mocha": "^3.4.2",
-    "supertest": "3.0.0",
     "tsc": "1.20150623.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
     "typescript": "2.3.3",
     "typescript-eslint-parser": "3.0.0"
   }

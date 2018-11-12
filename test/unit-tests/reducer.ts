@@ -47,7 +47,9 @@ describe('Reducer', () => {
     assertReducerOutput('', testUtils.getKeyValue('acer', 'care'));
 
     config.reducer.minimumAnagramSetSize = 1;
-    assertReducerOutput(testUtils.getKeyValue('acer', 'care'), testUtils.getKeyValue('acer', 'care'));
+    assertReducerOutput(
+      testUtils.getKeyValue('acer', 'care'),
+      testUtils.getKeyValue('acer', 'care'));
   });
 
   it('attempts to keep case through shouldDiscardCaseIfTwoSeen', () => {

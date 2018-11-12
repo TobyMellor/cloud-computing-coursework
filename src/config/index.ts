@@ -8,7 +8,8 @@ export default {
     // The anagram will only be printed from the reducer if the set's length is above this
     minimumAnagramSetSize: 2,
 
-    // If the same word is always seen with an apostrophe, print that one. Otherwise, drop the apostrophe.
+    // If the same word is always seen with an apostrophe, print that one.
+    // Otherwise, drop the apostrophe.
     // e.g. If "gardener's" and "gardeners'" is seen, just print "gardeners"
     shouldDiscardApostropheIfTwoSeen: true,
 

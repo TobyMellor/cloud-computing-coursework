@@ -11,9 +11,10 @@ const PUNCTUATION = /([.,\/#!$%\^&\*;:{}=\`~()"“”‘’?]|^')/g;
 export function splitWords(line: string) {
   const tokens = line.split(SEPARATORS);
 
-  const words = tokens.filter(w => !ILLEGAL_WORD.test(w))                           // Discard words containing punctuation
-                      .map(w => w.replace(PUNCTUATION, ''))                         // Remove surrounding punctuation
-                      .filter(w => w.length >= config.mapper.minimumAnagramLength); // Discard words below the min length
+  const words = tokens
+    .filter(w => !ILLEGAL_WORD.test(w))                           // Discard words containing punc
+    .map(w => w.replace(PUNCTUATION, ''))                         // Remove surrounding punctuation
+    .filter(w => w.length >= config.mapper.minimumAnagramLength); // Discard words below min length
 
   return words;
 }

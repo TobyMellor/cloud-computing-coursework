@@ -3,16 +3,16 @@ export function captureStream(stream) {
   const oldWrite = stream.write;
   let buf = '';
 
-  stream.write = function(chunk) {
+  stream.write = function (chunk) {
     buf += chunk.toString();
     oldWrite.apply(stream, arguments);
-  }
+  };
 
   return {
-    unhook: function unhook() {
+    unhook() {
       stream.write = oldWrite;
     },
-    captured: function() {
+    captured() {
       const output = buf;
       buf = '';
       return output;
@@ -25,7 +25,7 @@ export function getKeyValue(key: string, value: string) {
 }
 
 export function deindent(strings: string[]): string[] {
-  const stringsDeindented = strings.map(string => {
+  const stringsDeindented = strings.map((string) => {
     const stringDeindented = string.replace(/[\n]\ +/g, '\n')
                              .replace(/^[\n]/, '');
 

@@ -63,9 +63,9 @@ describe('Mapper', () => {
         .to
         .equal(getKeyValue('báç', 'ábç') + getKeyValue('abc', 'abc'));
     });
-    
+
     it('should keep apostrophies', () => {
-      mapper.handleLine(`gardeners gardener's gardeners' lady's`);
+      mapper.handleLine("gardeners gardener's gardeners' lady's");
 
       expect(hook.captured())
         .to
@@ -74,7 +74,7 @@ describe('Mapper', () => {
                getKeyValue('adeegnrrs', 'gardeners\'') +
                getKeyValue('adlsy', 'lady\'s'));
     });
-    
+
     it('should discard "words" that contain numbers', () => {
       mapper.handleLine('432425 whatever1');
 
@@ -82,7 +82,7 @@ describe('Mapper', () => {
         .to
         .equal('');
     });
-    
+
     it('should discard "words" that contain other characters', () => {
       mapper.handleLine('testing me@tobymellor.com tobymellor.com tes*ting test!');
 
@@ -93,7 +93,7 @@ describe('Mapper', () => {
     });
 
     it('should drop apostrophies that are prepending words', () => {
-      mapper.handleLine(`'tis a good morning's tobys'`);
+      mapper.handleLine("'tis a good morning's tobys'");
 
       expect(hook.captured())
         .to
@@ -107,17 +107,17 @@ describe('Mapper', () => {
   describe('Real world', () => {
     let child;
 
-    beforeEach(done => {
+    beforeEach((done) => {
       const parameters = [path.resolve('./dist/mapper.js')];
       child = spawn('node', parameters, {
-        stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+        stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
       });
-  
+
       child.stdin.setEncoding('utf-8');
       child.stdout.pipe(process.stdout);
       done();
     });
-  
+
     afterEach(() => {
       child.stdin.end();
       child.kill();
@@ -141,26 +141,34 @@ describe('Mapper', () => {
 
       stdin.write(nextMapperInputLine);
     }
-  
-    it('should handle simple mocks as expected', done => {
+
+    it('should handle simple mocks as expected', (done) => {
       const mapperExpectedInputLines: string[] = mocks.simple.mapper.testInputLines;
       const mapperExpectedOutputLines: string[] = mocks.simple.mapper.expectedOutputLines;
-  
+
       child.stdout.on('data', (msg: Buffer) => {
-        return handleIO(msg, mapperExpectedInputLines, mapperExpectedOutputLines, child.stdin, done);
+        return handleIO(msg,
+                        mapperExpectedInputLines,
+                        mapperExpectedOutputLines,
+                        child.stdin,
+                        done);
       });
-  
+
       child.stdin.write(mapperExpectedInputLines.shift());
     });
-  
-    it('should handle advanced mocks as expected', done => {
+
+    it('should handle advanced mocks as expected', (done) => {
       const mapperExpectedInputLines: string[] = mocks.advanced.mapper.testInputLines;
       const mapperExpectedOutputLines: string[] = mocks.advanced.mapper.expectedOutputLines;
-  
+
       child.stdout.on('data', (msg: Buffer) => {
-        return handleIO(msg, mapperExpectedInputLines, mapperExpectedOutputLines, child.stdin, done);
+        return handleIO(msg,
+                        mapperExpectedInputLines,
+                        mapperExpectedOutputLines,
+                        child.stdin,
+                        done);
       });
-  
+
       child.stdin.write(mapperExpectedInputLines.shift());
     });
   });

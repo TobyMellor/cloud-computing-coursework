@@ -6,7 +6,7 @@ class Mapper extends Handler {
   public handleLine(line: string) {
     const words: string[] = anagramService.splitWords(line);
     const keyValues: KeyValue[] = words.map(this.getKeyValue);
-    const formattedKeyValues: string = super.formatKeyValues(keyValues)
+    const formattedKeyValues: string = super.formatKeyValues(keyValues);
 
     streamService.write(formattedKeyValues);
   }
