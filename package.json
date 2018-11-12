@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm install && tsc && cp src/mapper_init.sh dist/mapper_init.sh && cp src/reducer_init.sh dist/reducer_init.sh",
+    "build": "npm install && tsc",
     "dev": "tsc --watch & nodemon dist",
     "lint": "eslint src --ext ts",
     "test": "tsc && mocha --require ts-node/register --watch-extensions ts \"test/**/*.ts\"",
