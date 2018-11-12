@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [[ $4 -eq 0 ]] ; then
-    echo 'Incorrect usage. Please specify the cluster ID, cluster region, input and output.'
-    echo 'Example: ./map-reduce.sh cluster-4751 global gs://coc105-coursework/10.txt gs://coc105-coursework-output/test-output'
+    echo "Incorrect usage. Please specify the cluster ID, cluster region, input and output."
+    echo "Example: ./map-reduce.sh cluster-4751 global gs://coc105-coursework/10.txt gs://coc105-coursework-output/test-output"
     exit 1
 fi
 
@@ -18,6 +18,8 @@ tar -xzf package.tar.gz
 mapper_script="$base_script dist/mapper.js"
 reducer_script="$base_script dist/reducer.js"
 
+touch ./dist/mapper_init.sh
+touch ./dist/reducer_init.sh
 echo "$mapper_script" > ./dist/mapper_init.sh
 echo "$reducer_script" > ./dist/reducer_init.sh
 
