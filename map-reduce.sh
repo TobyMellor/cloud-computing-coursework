@@ -31,7 +31,7 @@ echo "$reducer_script" > ./dist/reducer_init.sh
 
 # Zip the dist and node binary together and we'll include them in --files
 # Suppress any errors we don't care about
-{ tar -cvf package.tar.gz dist \"$(which node)\" ;} 2>/dev/null
+tar -cf package.tar.gz dist \"$(which node)\" &> /dev/null
 
 # Run the google commands, with the arguments specified
 gcloud dataproc jobs submit hadoop \
