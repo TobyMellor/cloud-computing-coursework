@@ -1,13 +1,19 @@
 #!/bin/bash
 
+# Exit if there isn't the correct number of arguments
 if [[ $4 -eq 0 ]] ; then
     echo "Incorrect usage. Please specify the cluster ID, cluster region, input and output."
     echo "Example: ./map-reduce.sh cluster-4751 global gs://coc105-coursework/10.txt gs://coc105-coursework-output/test-output"
     exit 1
 fi
 
+# Exit script if any error occurs (e.g. user pressing Ctrl + C)
+set -e
+
+# Compile typescript, move to /dist
 npm run build
 
+# Create two scripts for the mapper and the reducer
 base_script="#!/bin/sh
 
 # Extract the package
@@ -23,8 +29,10 @@ touch ./dist/reducer_init.sh
 echo "$mapper_script" > ./dist/mapper_init.sh
 echo "$reducer_script" > ./dist/reducer_init.sh
 
+# Zip the dist and node binary together and we'll include them in --files
 tar -cvf package.tar.gz dist \"$(which node)\"
 
+# Run the google commands, with the arguments specified
 gcloud dataproc jobs submit hadoop \
   --cluster $1 \
   --region=$2 \
