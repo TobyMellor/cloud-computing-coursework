@@ -9,6 +9,13 @@ class Reducer extends Handler {
 
   public handleLine(line: string) {
     const [normalizedWord, originalWord] = line.trim().split('\t');
+
+    if (!originalWord) {
+      console.log('ERROR!');
+      console.log(line);
+      console.log(normalizedWord, originalWord);
+    }
+
     let lowerWord = originalWord.toLowerCase();
 
     if (config.reducer.shouldDiscardApostropheIfTwoSeen) lowerWord = lowerWord.replace(/'/g, '');

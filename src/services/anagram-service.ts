@@ -4,7 +4,7 @@ export type Anagrams = {
   [prop: string]: string; // [lowercase word]: Original or lowercase
 };
 
-const SEPARATORS = /--+|_+| +/;
+const SEPARATORS = /--+|_+| +|\||\(|\)/;
 const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~()"“”‘’][^ ]+|\d)/;
 const PUNCTUATION = /([.,\/#!$%\^&\*;:{}=\`~()"“”‘’?]|^')/g;
 

@@ -56,6 +56,7 @@ export default {
         'eamIl four five six',
         'dog--god',
         'ogd dgo test',
+        '|Station|Karasjok|Sodankyla| Kew(19, 12).',
       ]),
       expectedOutputLines: deindent([
         `
@@ -96,6 +97,12 @@ export default {
           dgo\togd
           dgo\tdgo
           estt\ttest
+        `,
+        `
+          ainostt\tStation
+          aajkkors\tKarasjok
+          aadklnosy\tSodankyla
+          ekw\tKew
         `,
       ]),
     },
