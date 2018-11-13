@@ -18,8 +18,8 @@ tar -xzf package.tar.gz
 
 # Execute script with the included node binary
 .$(which node)"
-mapper_script="$base_script dist/mapper.js"
-reducer_script="$base_script dist/reducer.js"
+mapper_script="$base_script mapper.js"
+reducer_script="$base_script reducer.js"
 
 touch ./dist/mapper_init.sh
 touch ./dist/reducer_init.sh
