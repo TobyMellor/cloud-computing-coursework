@@ -4,9 +4,9 @@ export type Anagrams = {
   [prop: string]: string; // [lowercase word]: Original or lowercase
 };
 
-const SEPARATORS = /--+|_+| +|\||\(|\)/;
-const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~()"“”‘’][^ ]+|\d)/;
-const PUNCTUATION = /([.,\/#!$%\^&\*;:{}=\`~()"“”‘’?]|^')/g;
+const SEPARATORS = /--+|_+| +|[|()[]]/;
+const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~"“”‘’�][^ ]+|\d)/;
+const PUNCTUATION = /([^A-Za-z\u00C0-\u017F'-]|^'|^-)/g;
 
 export function splitWords(line: string) {
   const tokens = line.split(SEPARATORS);
@@ -14,7 +14,10 @@ export function splitWords(line: string) {
   const words = tokens
     .filter(w => !ILLEGAL_WORD.test(w))                           // Discard words containing punc
     .map(w => w.replace(PUNCTUATION, ''))                         // Remove surrounding punctuation
-    .filter(w => w.length >= config.mapper.minimumAnagramLength); // Discard words below min length
+    .filter((w) => {
+      return w.replace(/['-]/g, '')
+              .length >= config.mapper.minimumAnagramLength;
+    }); // Discard words (without any special characters) below min length
 
   return words;
 }

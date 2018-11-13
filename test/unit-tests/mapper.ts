@@ -3,6 +3,7 @@ import 'mocha';
 import { captureStream, getKeyValue } from './../test-utils';
 import Mapper from '../../src/handlers/Mapper';
 import mocks from '../mocks';
+import config from '../../src/config';
 
 const path = require('path');
 const { spawn } = require('child_process');
@@ -42,7 +43,6 @@ describe('Mapper', () => {
         .equal(getKeyValue('aeilm', 'e-mail'));
     });
 
-    // TO FIX: Change replace _ to regex or replaceAll
     it('treats all other separators as spaces', () => {
       mapper.handleLine('abc_def_ghi');
       mapper.handleLine('abc--def');

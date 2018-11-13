@@ -57,6 +57,8 @@ export default {
         'dog--god',
         'ogd dgo test',
         '|Station|Karasjok|Sodankyla| Kew(19, 12).',
+        '[eBook',
+        '<nice> one',
       ]),
       expectedOutputLines: deindent([
         `
@@ -103,6 +105,13 @@ export default {
           aajkkors\tKarasjok
           aadklnosy\tSodankyla
           ekw\tKew
+        `,
+        `
+          bekoo\teBook
+        `,
+        `
+          cein\tnice
+          eno\tone
         `,
       ]),
     },
