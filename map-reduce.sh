@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash +x
 
 # Exit if there isn't the correct number of arguments
 if [[ $4 -eq 0 ]] ; then
@@ -27,11 +27,10 @@ echo "$mapper_script" > ./dist/mapper_init.sh
 echo "$reducer_script" > ./dist/reducer_init.sh
 
 # Zip the dist and node binary together and we'll include them in --files
-# Suppress any errors we don't care about
-tar -cvf package.tar.gz dist \"$(which node)\" 2> /dev/null
+tar -cvf package.tar.gz dist "$(which node)"
 
 # Run the google commands, with the arguments specified
-gcloud dataproc jobs submit hadoop \
+time gcloud dataproc jobs submit hadoop \
   --cluster $1 \
   --region=$2 \
   --jar file:///usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
