@@ -17,7 +17,7 @@ base_script="#!/bin/sh
 tar -xzf package.tar.gz
 
 # Execute script with the included node binary
-sh $(which node)"
+.$(which node)"
 mapper_script="$base_script dist/mapper.js"
 reducer_script="$base_script dist/reducer.js"
 
