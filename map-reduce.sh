@@ -14,12 +14,12 @@ npm run build
 base_script="#!/bin/sh
 
 # Extract the package
-tar -xzf package.tar.gz
+tar -xf package.tar -C .
 
 # Execute script with the included node binary
 .$(which node)"
-mapper_script="$base_script mapper.js"
-reducer_script="$base_script reducer.js"
+mapper_script="$base_script dist/mapper.js"
+reducer_script="$base_script dist/reducer.js"
 
 touch ./dist/mapper_init.sh
 touch ./dist/reducer_init.sh
@@ -27,14 +27,14 @@ echo "$mapper_script" > ./dist/mapper_init.sh
 echo "$reducer_script" > ./dist/reducer_init.sh
 
 # Zip the dist and node binary together and we'll include them in --files
-tar -cvf package.tar.gz dist "$(which node)"
+tar -cvf package.tar dist "$(which node)"
 
 # Run the google commands, with the arguments specified
 time gcloud dataproc jobs submit hadoop \
   --cluster $1 \
   --region=$2 \
   --jar file:///usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
-  --files package.tar.gz,./dist/mapper_init.sh,./dist/reducer_init.sh \
+  --files package.tar,./dist/mapper_init.sh,./dist/reducer_init.sh \
   -- -mapper 'sh mapper_init.sh' \
      -reducer 'sh reducer_init.sh' \
      -input $3 \
