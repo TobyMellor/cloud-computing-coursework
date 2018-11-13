@@ -22,6 +22,6 @@ export default {
     shouldDiscardCaseIfTwoSeen: true,
 
     // Test format: { Anagram1, Anagram2 }
-    shouldFormatTestOutput: false,
+    shouldFormatTestOutput: true,
   },
 };
