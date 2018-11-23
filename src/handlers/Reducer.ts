@@ -7,11 +7,21 @@ class Reducer extends Handler {
   private currentKey: string = null;
   private currentValues: Anagrams = {};
 
+  /**
+   * This function will get streamed a list of key value pairs
+   * in an alphabetically sorted order.
+   *
+   * This function stores all words that have the same
+   * normalized key.
+   *
+   * @param line A key/value, e.g. boty\tToby\n
+   */
   public handleLine(line: string) {
     const [normalizedWord, originalWord] = line.trim().split('\t');
 
     let lowerWord = originalWord.toLowerCase();
 
+    // See the relevant config values
     if (config.reducer.shouldDiscardApostropheIfTwoSeen) lowerWord = lowerWord.replace(/'/g, '');
     if (config.reducer.shouldDiscardHyphenIfTwoSeen)     lowerWord = lowerWord.replace(/-/g, '');
 
@@ -38,7 +48,15 @@ class Reducer extends Handler {
     }
   }
 
+  /**
+   * This function outputs anagrams in the desired format.
+   *
+   * @param currentKey The alphabetically sorted, normalized key
+   * @param currentValues Anagrams which have the same currentKey
+   */
   private output(currentKey: string, currentValues: Anagrams) {
+
+    // e.g. Don't output if there's only one anagram in the set
     if (!shouldOutputAnagrams(currentValues)) {
       return;
     }
@@ -53,6 +71,9 @@ class Reducer extends Handler {
     streamService.write(formattedKeyValue);
   }
 
+  /**
+   * Don't forget to output the last line!
+   */
   public close() {
     this.output(this.currentKey, this.currentValues);
     this.currentKey = null;

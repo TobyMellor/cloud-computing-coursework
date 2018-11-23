@@ -4,11 +4,16 @@ export type Anagrams = {
   [prop: string]: string; // [lowercase word]: Original or lowercase
 };
 
-const SEPARATORS = /--+|_+| +|[|()[]]/;
-const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~"“”‘’�][^ ]+|\d)/;
-const PUNCTUATION = /([^A-Za-z\u00C0-\u017F'-]|^'|^-)/g;
-
+/**
+ * Takes a line of text, splits it into valid words.
+ *
+ * @param line A line of text to split into words.
+ */
 export function splitWords(line: string) {
+  const SEPARATORS = /--+|_+| +|[|()[]]/;
+  const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~"“”‘’][^ ]+|\d)/;
+  const PUNCTUATION = /([^A-Za-z\u00C0-\u017F'-]|^'|^-)/g;
+
   const tokens = line.split(SEPARATORS);
 
   const words = tokens
@@ -22,6 +27,12 @@ export function splitWords(line: string) {
   return words;
 }
 
+/**
+ * Alphabetically sorts a word, and strips out
+ * any special characters
+ *
+ * @param word Word to normalize
+ */
 export function getNormalizedWord(word: string) {
 
   // Convert to lower case, remove special characters
@@ -38,6 +49,15 @@ export function getNormalizedWord(word: string) {
   return normalizedWord;
 }
 
+/**
+ * Determines whether a set of anagrams should
+ * be printed out or not.
+ *
+ * Should not be printed out if:
+ *    - It's below a certain length
+ *
+ * @param anagrams Set of unique anagrams
+ */
 export function shouldOutputAnagrams(anagrams: Anagrams) {
   const anagramCount = Object.keys(anagrams).length;
 
