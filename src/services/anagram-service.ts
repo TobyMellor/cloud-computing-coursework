@@ -10,7 +10,7 @@ export type Anagrams = {
  * @param line A line of text to split into words.
  */
 export function splitWords(line: string) {
-  const SEPARATORS = /--+|_+| +|[|()[]]/;
+  const SEPARATORS = /--+|_+| +|\||\(|\)|\[|\]|\]/;
   const ILLEGAL_WORD = /([^ ]+[.,\/#!$%\^&\*;:{}=\`~"“”‘’][^ ]+|\d)/;
   const PUNCTUATION = /([^A-Za-z\u00C0-\u017F'-]|^'|^-)/g;
 
